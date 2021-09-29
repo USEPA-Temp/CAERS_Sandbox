@@ -1,0 +1,35 @@
+<!--
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+-->
+<header>
+  <div class="d-flex flex-row flex-wrap justify-content-between border-bottom border-dark p-1">
+    <div id="logo">
+      <img src="assets/images/eenterprise_thumb.png" alt="E-ENTERPRISE for the environment" class="logo-width">
+    </div>
+    <div>
+      <strong>Combined Air Emissions Reporting System</strong>
+    </div>
+    <div id="userInfo" *ngIf="userContext.user">
+      {{userContext.user.role}}- {{userContext.user.cdxUserId}} <fa-icon icon="user-circle" size="lg" aria-label="user-icon"></fa-icon>
+        <a class="btn btn-link p-1 mb-1" href="javascript:void(0);" (click)="logout()"><u>Logout</u></a>
+    </div>
+  </div>
+  
+  <div class="announcement-bar" *ngIf="announcementEnabled && announcementText">
+      <strong>{{announcementText}}</strong>
+  </div>
+</header>
+

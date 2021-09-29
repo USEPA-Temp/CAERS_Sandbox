@@ -1,0 +1,77 @@
+<!--
+ * © Copyright 2019 EPA CAERS Project Team
+ *
+ * This file is part of the Common Air Emissions Reporting System (CAERS).
+ *
+ * CAERS is free software: you can redistribute it and/or modify it under the 
+ * terms of the GNU General Public License as published by the Free Software Foundation, 
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * CAERS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with CAERS.  If 
+ * not, see <https://www.gnu.org/licenses/>.
+-->
+<div class="card  mb-3">
+    <div class="card-header text-center">
+        <strong>Quality Review</strong>
+    </div>
+    <div class="card-body">
+
+        <div class="d-flex flex-row justify-content-center" style="font-size: large"
+             *ngIf="validationComplete === false">
+            <div class="spinner-border text-dark" role="status"></div>
+            <div class="mt-1 ml-2">Please wait while your QA Checks report is generated...</div>
+        </div>
+
+        <div *ngIf="validationComplete">
+            <div class="text-success" *ngIf="(!hasErrors() && hasWarnings()) "> 
+                Quality checks were completed with warnings.  Please review the following warnings and make any necessary updates before submitting your report from the Report Summary screen.
+            </div>
+            <div class="text-success" *ngIf="!(hasErrors() || hasWarnings())">
+                Quality checks were completed successfully with no warnings or errors. You can now certify and submit your report from the Report Summary screen.
+            </div>
+            <div *ngIf="!hasErrors()"><button id="proceedToReportSummaryBtn" routerLink="{{baseUrl}}/summary"  class="btn btn-success btn-md my-3">Proceed to Report Summary</button></div>
+
+            <div class="validation-item-error" *ngIf="validationResult.federalErrors.length > 0 || validationResult.stateErrors.length > 0">
+                <div class="h3 font-weight-bolder">Errors</div>
+                <ol class="pl-3">
+                    <li *ngFor="let item of validationResult.federalErrors">
+                        <span *ngIf="item.invalidValue">
+                            <a [routerLink]="[item.url]" class="text-danger"><u>{{item.invalidValue?.description}}</u></a> - 
+                        </span>
+                        {{ item.errorMsg }}
+                    </li>
+                    <li *ngFor="let item of validationResult.stateErrors">
+                        <span *ngIf="item.invalidValue">
+                            <a [routerLink]="[item.url]" class="text-danger"><u>{{item.invalidValue?.description}}</u></a> - 
+                        </span>
+                        {{ item.errorMsg }}
+                    </li>
+                </ol>
+            </div>
+
+            <div class="validation-item-warning" *ngIf="validationResult.federalWarnings.length > 0 || validationResult.stateWarnings.length > 0">
+                <div class="h3 font-weight-bolder">Warnings</div>
+                <ol class="pl-3">
+                    <li *ngFor="let item of validationResult.federalWarnings">
+                        <span *ngIf="item.invalidValue">
+                            <a [routerLink]="[item.url]" class="text-info"><u style="color:#333399;" >{{item.invalidValue?.description}}</u></a> - 
+                        </span>
+                        {{ item.errorMsg }}
+                    </li>
+                    <li *ngFor="let item of validationResult.stateWarnings">
+                        <span *ngIf="item.invalidValue">
+                            <a [routerLink]="[item.url]" class="text-info"><u>{{item.invalidValue?.description}}</u></a> - 
+                        </span>
+                        {{ item.errorMsg }}
+                    </li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+
