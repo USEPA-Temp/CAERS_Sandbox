@@ -1,0 +1,36 @@
+name: CAERS Maven Build
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+
+      - name: Build with Maven
+        run: | 
+          mvn -B package --file pom.xml
+          mkdir staging && cp target/cef-web.war staging
+
+      - name: Set up a cache for Maven
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Archive build
+        if: success()
+        uses: actions/upload-artifact@v2
+        with: 
+          name: github-actions-artifact
+          path: staging
