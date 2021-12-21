@@ -23,7 +23,10 @@ public enum SLTPropertyName implements IPropertyKey {
     EmailAddress("slt-email"),
     EisUser("slt-eis-user"),
     EisProgramCode("slt-eis-program-code"),
-	FacilityNaicsEnabled("feature.industry-facility-naics.enabled");
+	FacilityNaicsEnabled("feature.industry-facility-naics.enabled"),
+	SLTFeatureAnnouncementEnabled("slt-feature.announcement.enabled"),
+    SLTFeatureAnnouncementText("slt-feature.announcement.text"),
+    SLTFeatureThresholdScreeningGADNREnabled("slt-feature.gadnr-threshold-screen.enabled");
 
     private final String key;
 

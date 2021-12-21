@@ -29,9 +29,9 @@ import { EisLatLongToleranceLookup } from 'src/app/shared/models/eis-latlong-tol
 import { FacilityCategoryCode } from 'src/app/shared/models/facility-category-code';
 import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
-import { FuelUseSccCode } from 'src/app/shared/models/fuel-use-scc-code';
 import { CalculationMaterialCode } from 'src/app/shared/models/calculation-material-code';
 import { MasterFacilityNaicsCode } from 'src/app/shared/models/master-facility-naics-code';
+import { EnergyConversionFactor } from 'src/app/shared/models/energy-conversion-factor';
 
 @Injectable({
   providedIn: 'root'
@@ -50,11 +50,6 @@ export class LookupService {
   retrieveFuelUseMaterial(): Observable<CalculationMaterialCode[]> {
     const url = `${this.baseUrl}/fuelUse/material`;
     return this.http.get<CalculationMaterialCode[]>(url);
-  }
-
-  retrieveSccFuelUseMaterial(scc: string): Observable<FuelUseSccCode> {
-    const url = `${this.baseUrl}/fuelUse/material/${scc}`;
-    return this.http.get<FuelUseSccCode>(url);
   }
 
   retrieveCalcMethod(): Observable<CalculationMethodCode[]> {
@@ -225,6 +220,16 @@ export class LookupService {
   retrieveCurrentFacilitySourceType(year: number): Observable<InventoryYearCodeLookup[]> {
     const url = `${this.baseUrl}/facility/sourceType/${year}`;
     return this.http.get<InventoryYearCodeLookup[]>(url);
+  }
+
+  basicSccSearch(searchTerm: string): Observable<PointSourceSccCode[]> {
+	const url = `${this.baseUrl}/${searchTerm}`;
+	return this.http.get<PointSourceSccCode[]>(url);
+  }
+
+  retrieveEnergyConversionFactor(calcMaterial: string): Observable<EnergyConversionFactor> {
+    const url = `${this.baseUrl}/energyConversionFactor/${calcMaterial}`;
+    return this.http.get<EnergyConversionFactor>(url);
   }
 
 }

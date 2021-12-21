@@ -54,8 +54,10 @@ import {FileAttachmentModalComponent} from './components/file-attachment-modal/f
 import {ReportAttachmentTableComponent} from './components/report-attachment-table/report-attachment-table.component';
 import {LegacyItemValidatorDirective} from './directives/legacy-item-validator.directive';
 import {EisTransactionAttachmentModalComponent} from './components/eis-transaction-attachment-modal/eis-transaction-attachment-modal.component';
-import { CommentModalComponent } from './components/comment-modal/comment-modal.component';
-import { HorizontalNavComponent } from './components/horizontal-nav/horizontal-nav.component';
+import {CommentModalComponent} from './components/comment-modal/comment-modal.component';
+import {HorizontalNavComponent} from './components/horizontal-nav/horizontal-nav.component';
+import {RequiredAsteriskComponent} from './components/required-asterisk/required-asterisk.component';
+import {EmailNotificationModalComponent} from './components/email-notification-modal/email-notification-modal.component';
 
 @NgModule({
     declarations: [
@@ -75,13 +77,15 @@ import { HorizontalNavComponent } from './components/horizontal-nav/horizontal-n
         NumberValidatorDirective,
         BaseConfirmationModalComponent,
         FileAttachmentModalComponent,
+		EmailNotificationModalComponent,
         BulkUploadComponent,
         StripPeriodEndingPipe,
         LegacyUomValidatorDirective,
         LegacyItemValidatorDirective,
         EisTransactionAttachmentModalComponent,
         CommentModalComponent,
-        HorizontalNavComponent
+        HorizontalNavComponent,
+        RequiredAsteriskComponent
     ],
     exports: [
         FacilityInfoComponent,
@@ -97,7 +101,8 @@ import { HorizontalNavComponent } from './components/horizontal-nav/horizontal-n
         ReportAttachmentTableComponent,
         ValidationMessageComponent,
         StripPeriodEndingPipe,
-        HorizontalNavComponent
+        HorizontalNavComponent,
+		RequiredAsteriskComponent
     ],
     imports: [
         CommonModule,
@@ -110,6 +115,7 @@ import { HorizontalNavComponent } from './components/horizontal-nav/horizontal-n
     entryComponents: [
         BaseConfirmationModalComponent,
         FileAttachmentModalComponent,
+		EmailNotificationModalComponent,
         EisTransactionAttachmentModalComponent
     ]
 })

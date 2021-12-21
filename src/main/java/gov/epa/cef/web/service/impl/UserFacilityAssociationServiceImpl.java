@@ -179,6 +179,13 @@ public class UserFacilityAssociationServiceImpl {
 
         return this.ufaMapper.toDtoList(entities);
     }
+    
+    public List<String> findProgramSystemCodesByUserRoleId(Long userRoleId) {
+
+        List<String> entities = this.ufaRepo.retrieveMasterFacilityRecordProgramSystemCodes(userRoleId);
+        
+        return entities;
+    }
 
     public List<UserFacilityAssociationDto> findByUserRoleIdAndApproved(Long userRoleId, boolean approved) {
 
@@ -223,7 +230,7 @@ public class UserFacilityAssociationServiceImpl {
         return this.ufaMapper.toDto(association, profile);
     }
 
-    private List<UserFacilityAssociationDto> mapAssociations(List<UserFacilityAssociation> associations) {
+    public List<UserFacilityAssociationDto> mapAssociations(List<UserFacilityAssociation> associations) {
         
         RegistrationUserSearchCriteria criteria = new RegistrationUserSearchCriteria();
         criteria.setDataflow("CAER");

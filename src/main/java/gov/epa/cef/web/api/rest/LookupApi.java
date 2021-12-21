@@ -35,10 +35,10 @@ import gov.epa.cef.web.service.dto.CalculationMaterialCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
+import gov.epa.cef.web.service.dto.EnergyConversionFactorDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsCountyDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
-import gov.epa.cef.web.service.dto.FuelUseSccCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
@@ -74,17 +74,6 @@ public class LookupApi {
         return new ResponseEntity<List<CalculationMaterialCodeDto>>(result, HttpStatus.OK);
     }
     
-    /**
-     * Retrieve Fuel Use Material codes by Scc
-     * @return
-     */
-    @GetMapping(value = "/fuelUse/material/{scc}")
-    @ResponseBody
-    public ResponseEntity<FuelUseSccCodeDto> retrieveFuelUseMaterialCodesByScc(@NotNull @PathVariable String scc) {
-
-    	FuelUseSccCodeDto result = lookupService.retrieveFuelUseMaterialCodesByScc(scc);
-        return new ResponseEntity<FuelUseSccCodeDto>(result, HttpStatus.OK);
-    }
 
     /**
      * Retrieve Calculation Method codes
@@ -491,4 +480,24 @@ public class LookupApi {
         List<CodeLookupDto> result = lookupService.retrieveCurrentReleasePointTypeCodes(year);
         return new ResponseEntity<List<CodeLookupDto>>(result, HttpStatus.OK);
     }
+    
+    @GetMapping(value = "/{searchTerm}")
+    @ResponseBody
+    public ResponseEntity<List<PointSourceSccCodeDto>> retrieveSearchSccCodes(@NotNull @PathVariable String searchTerm) {
+        
+    	List<PointSourceSccCodeDto> result = lookupService.retrieveSearchSccCodes(searchTerm);
+        return new ResponseEntity<List<PointSourceSccCodeDto>>(result, HttpStatus.OK);
+    }
+    
+    /**
+     * Retrieve Energy Conversion Factor by throughput calculation material
+     * @param calcMaterial
+     * @return
+     */
+    @GetMapping(value = "/energyConversionFactor/{calcMaterial}")
+    @ResponseBody
+    public ResponseEntity<EnergyConversionFactorDto> retrieveEnergyConversionFactor(@NotNull @PathVariable String calcMaterial) {
+    	EnergyConversionFactorDto result = lookupService.findByCalculationMaterialCode(calcMaterial);
+    	return new ResponseEntity<EnergyConversionFactorDto>(result, HttpStatus.OK);
+    }  
 }

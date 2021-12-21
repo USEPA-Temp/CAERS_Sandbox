@@ -19,6 +19,16 @@ import { Validators, FormBuilder, FormControl } from '@angular/forms';
 import { SltPropertyService } from 'src/app/core/services/slt-property.service';
 import { ToastrService } from 'ngx-toastr';
 import { AppProperty } from 'src/app/shared/models/app-property';
+import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+import { User } from 'src/app/shared/models/user';
+import { LookupService } from 'src/app/core/services/lookup.service';
+import { UserContextService } from 'src/app/core/services/user-context.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EmailNotificationModalComponent } from 'src/app/modules/shared/components/email-notification-modal/email-notification-modal.component';
+import { CommunicationService } from 'src/app/core/services/communication.service';
+
+const BooleanDataType = 'boolean';
+const BooleanTrue = 'true';
 
 @Component({
   selector: 'app-slt-properties',
@@ -28,32 +38,88 @@ import { AppProperty } from 'src/app/shared/models/app-property';
 export class SltPropertiesComponent implements OnInit {
 
   properties: AppProperty[];
+  user: User;
+  agencyDataValues: BaseCodeLookup[];
+  programSystemCode: BaseCodeLookup;
+  slt: string;
 
   propertyForm = this.fb.group({});
 
   constructor(
+      private userContextService: UserContextService,
+	  private lookupService: LookupService,
       private propertyService: SltPropertyService,
+	  private communicationService: CommunicationService,
+	  private modalService: NgbModal,
       private fb: FormBuilder,
       private toastr: ToastrService) { }
 
   ngOnInit() {
-    this.propertyService.retrieveAll()
-    .subscribe(result => {
-
-      result.sort((a, b) => (a.name > b.name) ? 1 : -1);
-      result.forEach(prop => {
-        if (prop.datatype !== 'boolean') {
-          this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
-            Validators.required
-          ]}));
-        } else {
-          const booleanValue = (prop.value.toLowerCase() === 'true');
-          this.propertyForm.addControl(prop.name, new FormControl(booleanValue));
-        }
+    this.userContextService.getUser()
+    .subscribe( user => {
+          this.user = user;
       });
 
-      this.properties = result;
-    });
+    this.lookupService.retrieveProgramSystemTypeCode()
+    .subscribe(result => {
+        this.agencyDataValues = result.sort((a, b) => (a.code > b.code) ? 1 : -1);
+      });
+
+    if (this.user.isReviewer()) {
+      this.slt = this.user.programSystemCode;
+    }
+
+    this.refreshSltPropertyList();
+
+  }
+
+  onAgencySelected() {
+    this.slt = this.programSystemCode ? this.programSystemCode.code : null;
+    this.refreshSltPropertyList();
+  }
+
+
+  refreshSltPropertyList() {
+
+    if (this.slt) {
+      this.propertyService.retrieveAll(this.slt)
+        .subscribe(result => {
+          result.sort((a, b) => (a.name > b.name) ? 1 : -1);
+          result.forEach(prop => {
+			if (Object.keys(this.propertyForm.controls).length === 0) {
+	            if (prop.datatype !== BooleanDataType) {
+	
+				  if (!prop.required) {
+					this.propertyForm.addControl(prop.name, new FormControl(prop.value));
+				  } else {
+	                this.propertyForm.addControl(prop.name, new FormControl(prop.value, { validators: [
+	                  Validators.required
+	                ]}));
+				  }
+	            } else {
+	              const booleanValue = (prop.value.toLowerCase() === BooleanTrue);
+	              this.propertyForm.addControl(prop.name, new FormControl(booleanValue));
+	            }
+			} else {
+
+				if (prop.datatype !== BooleanDataType) {
+				  if (!prop.required) {
+					this.propertyForm.setControl(prop.name, new FormControl(prop.value));
+				  } else {
+				    this.propertyForm.setControl(prop.name, new FormControl(prop.value, { validators: [
+	                  Validators.required
+	                ]}));
+				  }
+	            } else {
+	              const booleanValue = (prop.value.toLowerCase() === BooleanTrue);
+				  this.propertyForm.setControl(prop.name, new FormControl(booleanValue));
+	            }
+			}
+
+          });
+		  this.properties = result;
+        });
+      }
   }
 
   onSubmit() {
@@ -62,19 +128,45 @@ export class SltPropertiesComponent implements OnInit {
     } else {
 
       const updatedProperties: AppProperty[] = [];
+
+	  const reportAttachment: string = "report-attachment-upload";
+	  var oneAttachmentUploadEnabled: boolean = false;
+
       this.properties.forEach(prop => {
-        if (prop.value !== this.propertyForm.get([prop.name]).value) {
+		//if name like report attachment, check status
+		if (prop.name.includes(reportAttachment)) {
+			if ((this.propertyForm.get([prop.name]).value === true )) {
+				oneAttachmentUploadEnabled = true;
+			}
+		}
+		
+        if (prop.value !== this.propertyForm.get([prop.name]).value
+			|| !prop.value) {
           prop.value = this.propertyForm.get([prop.name]).value;
           updatedProperties.push(prop);
         }
       });
 
-      this.propertyService.bulkUpdate(updatedProperties)
-      .subscribe(result => {
-        this.toastr.success('', 'Properties updated successfully.');
-      });
-
+	  if (oneAttachmentUploadEnabled) {
+	    this.propertyService.bulkUpdate(updatedProperties, this.slt)
+	    .subscribe(result => {
+		  this.toastr.success('', 'Properties updated successfully.');
+	    });
+	  } else {
+		this.toastr.error('', 'At least one report attachment upload type must be enabled.');
+	  }
     }
   }
 
+  openNotificationEmailModal() {
+	const modalRef = this.modalService.open(EmailNotificationModalComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.title = 'Email Notification';
+    modalRef.componentInstance.message = `Send a notification to all Preparers and NEI Certifiers of facilities associated with ${this.slt}.`
+
+    modalRef.result.then((resp) => {
+	
+    }, () => {
+      // needed for dismissing without errors
+    });
+  }
 }

@@ -52,7 +52,7 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
         percentControl: ['', [
             Validators.max(100.0),
             Validators.min(1),
-            Validators.pattern('^[0-9]{1,3}([\.][0-9]{1})?$')
+            Validators.pattern('^[0-9]{1,4}([\.][0-9]{1})?$')
         ]],
         operatingStatusCode: [null, [
             Validators.required,
@@ -73,7 +73,6 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
         upgradeDate: [null],
         endDate: [null],
         description: ['', [
-            Validators.required,
             Validators.maxLength(200)
         ]],
         comments: [null, Validators.maxLength(400)]

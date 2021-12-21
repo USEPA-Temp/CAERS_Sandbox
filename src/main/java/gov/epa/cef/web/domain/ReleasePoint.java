@@ -82,14 +82,14 @@ public class ReleasePoint extends BaseAuditEntity {
     @JoinColumn(name = "stack_diameter_uom_code", nullable = false)
     private UnitMeasureCode stackDiameterUomCode;
 
-    @Column(name = "stack_width", precision = 4, scale = 1)
+    @Column(name = "stack_width", precision = 6, scale = 3)
     private BigDecimal stackWidth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stack_width_uom_code", nullable = false)
     private UnitMeasureCode stackWidthUomCode;
 
-    @Column(name = "stack_length", precision = 4, scale = 1)
+    @Column(name = "stack_length", precision = 6, scale = 3)
     private BigDecimal stackLength;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -116,17 +116,11 @@ public class ReleasePoint extends BaseAuditEntity {
     @Column(name = "status_year")
     private Short statusYear;
 
-    @Column(name = "fugitive_line_1_latitude", precision = 10, scale = 6)
-    private BigDecimal fugitiveLine1Latitude;
+    @Column(name = "fugitive_mid_pt2_latitude", precision = 10, scale = 6)
+    private BigDecimal fugitiveMidPt2Latitude;
 
-    @Column(name = "fugitive_line_1_longitude", precision = 10, scale = 6)
-    private BigDecimal fugitiveLine1Longitude;
-
-    @Column(name = "fugitive_line_2_latitude", precision = 10, scale = 6)
-    private BigDecimal fugitiveLine2Latitude;
-
-    @Column(name = "fugitive_line_2_longitude", precision = 10, scale = 6)
-    private BigDecimal fugitiveLine2Longitude;
+    @Column(name = "fugitive_mid_pt2_longitude", precision = 10, scale = 6)
+    private BigDecimal fugitiveMidPt2Longitude;
 
     @Column(name = "latitude", precision = 10, scale = 6)
     private BigDecimal latitude;
@@ -141,15 +135,15 @@ public class ReleasePoint extends BaseAuditEntity {
     @JoinColumn(name = "fugitive_height_uom_code", nullable = false)
     private UnitMeasureCode fugitiveHeightUomCode;
 
-    @Column(name = "fugitive_width", precision = 6, scale = 0)
-    private Long fugitiveWidth;
+    @Column(name = "fugitive_width", precision = 8, scale = 3)
+    private BigDecimal fugitiveWidth;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_width_uom_code", nullable = false)
     private UnitMeasureCode fugitiveWidthUomCode;
 
-    @Column(name = "fugitive_length", precision = 6, scale = 0)
-    private Long fugitiveLength;
+    @Column(name = "fugitive_length", precision = 8, scale = 3)
+    private BigDecimal fugitiveLength;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fugitive_length_uom_code", nullable = false)
@@ -160,6 +154,10 @@ public class ReleasePoint extends BaseAuditEntity {
 
     @Column(name = "comments", length = 400)
     private String comments;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "previous_year_status_code", nullable = true)
+    private OperatingStatusCode previousYearOperatingStatusCode;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "releasePoint")
     private List<ReleasePointAppt> releasePointAppts = new ArrayList<ReleasePointAppt>(0);
@@ -198,10 +196,8 @@ public class ReleasePoint extends BaseAuditEntity {
         this.exitGasFlowRate = originalReleasePoint.getExitGasFlowRate();
         this.exitGasFlowUomCode = originalReleasePoint.getExitGasFlowUomCode();
         this.statusYear = originalReleasePoint.getStatusYear();
-        this.fugitiveLine1Latitude = originalReleasePoint.getFugitiveLine1Latitude();
-        this.fugitiveLine1Longitude = originalReleasePoint.getFugitiveLine1Longitude();
-        this.fugitiveLine2Latitude = originalReleasePoint.getFugitiveLine2Latitude();
-        this.fugitiveLine2Longitude = originalReleasePoint.getFugitiveLine2Longitude();
+        this.fugitiveMidPt2Latitude = originalReleasePoint.getFugitiveMidPt2Latitude();
+        this.fugitiveMidPt2Longitude = originalReleasePoint.getFugitiveMidPt2Longitude();
         this.latitude = originalReleasePoint.getLatitude();
         this.longitude = originalReleasePoint.getLongitude();
         this.comments = originalReleasePoint.getComments();
@@ -369,37 +365,21 @@ public class ReleasePoint extends BaseAuditEntity {
         this.statusYear = statusYear;
     }
 
-    public BigDecimal getFugitiveLine1Latitude() {
-        return fugitiveLine1Latitude;
-    }
+    public BigDecimal getFugitiveMidPt2Latitude() {
+		return fugitiveMidPt2Latitude;
+	}
 
-    public void setFugitiveLine1Latitude(BigDecimal fugitiveLine1Latitude) {
-        this.fugitiveLine1Latitude = fugitiveLine1Latitude;
-    }
+	public void setFugitiveMidPt2Latitude(BigDecimal fugitiveMidPt2Latitude) {
+		this.fugitiveMidPt2Latitude = fugitiveMidPt2Latitude;
+	}
 
-    public BigDecimal getFugitiveLine1Longitude() {
-        return fugitiveLine1Longitude;
-    }
+	public BigDecimal getFugitiveMidPt2Longitude() {
+		return fugitiveMidPt2Longitude;
+	}
 
-    public void setFugitiveLine1Longitude(BigDecimal fugitiveLine1Longitude) {
-        this.fugitiveLine1Longitude = fugitiveLine1Longitude;
-    }
-
-    public BigDecimal getFugitiveLine2Latitude() {
-        return fugitiveLine2Latitude;
-    }
-
-    public void setFugitiveLine2Latitude(BigDecimal fugitiveLine2Latitude) {
-        this.fugitiveLine2Latitude = fugitiveLine2Latitude;
-    }
-
-    public BigDecimal getFugitiveLine2Longitude() {
-        return fugitiveLine2Longitude;
-    }
-
-    public void setFugitiveLine2Longitude(BigDecimal fugitiveLine2Longitude) {
-        this.fugitiveLine2Longitude = fugitiveLine2Longitude;
-    }
+	public void setFugitiveMidPt2Longitude(BigDecimal fugitiveMidPt2Longitude) {
+		this.fugitiveMidPt2Longitude = fugitiveMidPt2Longitude;
+	}
 
     public BigDecimal getLatitude() {
         return this.latitude;
@@ -457,11 +437,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.fugitiveHeightUomCode = fugitiveHeightUomCode;
     }
 
-    public Long getFugitiveWidth() {
+    public BigDecimal getFugitiveWidth() {
         return fugitiveWidth;
     }
 
-    public void setFugitiveWidth(Long fugitiveWidth) {
+    public void setFugitiveWidth(BigDecimal fugitiveWidth) {
         this.fugitiveWidth = fugitiveWidth;
     }
 
@@ -473,11 +453,11 @@ public class ReleasePoint extends BaseAuditEntity {
         this.fugitiveWidthUomCode = fugitiveWidthUomCode;
     }
 
-    public Long getFugitiveLength() {
+    public BigDecimal getFugitiveLength() {
         return fugitiveLength;
     }
 
-    public void setFugitiveLength(Long fugitiveLength) {
+    public void setFugitiveLength(BigDecimal fugitiveLength) {
         this.fugitiveLength = fugitiveLength;
     }
 
@@ -496,6 +476,14 @@ public class ReleasePoint extends BaseAuditEntity {
     public void setFugitiveAngle(Long fugitiveAngle) {
         this.fugitiveAngle = fugitiveAngle;
     }
+    
+    public OperatingStatusCode getPreviousYearOperatingStatusCode() {
+		return previousYearOperatingStatusCode;
+	}
+
+	public void setPreviousYearOperatingStatusCode(OperatingStatusCode previousYearOperatingStatusCode) {
+		this.previousYearOperatingStatusCode = previousYearOperatingStatusCode;
+	}
 
     public List<ReleasePointAppt> getReleasePointAppts() {
         return this.releasePointAppts;

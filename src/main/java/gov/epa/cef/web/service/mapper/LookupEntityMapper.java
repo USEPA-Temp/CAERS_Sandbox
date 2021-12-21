@@ -24,11 +24,11 @@ import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.EisLatLongToleranceLookup;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsOperatingTypeCode;
+import gov.epa.cef.web.domain.EnergyConversionFactor;
 import gov.epa.cef.web.domain.FacilityCategoryCode;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.FipsCounty;
 import gov.epa.cef.web.domain.FipsStateCode;
-import gov.epa.cef.web.domain.FuelUseSccCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.PointSourceSccCode;
@@ -47,10 +47,10 @@ import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
 import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
+import gov.epa.cef.web.service.dto.EnergyConversionFactorDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsCountyDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
-import gov.epa.cef.web.service.dto.FuelUseSccCodeDto;
 import gov.epa.cef.web.service.dto.PointSourceSccCodeDto;
 import gov.epa.cef.web.service.dto.PollutantDto;
 import gov.epa.cef.web.service.dto.UnitMeasureCodeDto;
@@ -88,7 +88,6 @@ public abstract class LookupEntityMapper {
 
     public abstract List<CodeLookupDto> controlMeasureCodeToDtoList(List<ControlMeasureCode> source);
     
-    
     public abstract List<CalculationMaterialCodeDto> fuelUseCalculationMaterialToDtoList(List<CalculationMaterialCode> source);
     
     public abstract CodeLookupDto releasePointTypCodeToDto(ReleasePointTypeCode source);
@@ -117,13 +116,15 @@ public abstract class LookupEntityMapper {
 
     public abstract PointSourceSccCodeDto pointSourceSccCodeToDto(PointSourceSccCode source);
     
-    public abstract FuelUseSccCodeDto fuelUseSccCodeToDto(FuelUseSccCode source);
+    public abstract List<PointSourceSccCodeDto> pointSourceSccCodeToDtoList(List<PointSourceSccCode> source);
     
     public abstract EisLatLongToleranceLookupDto EisLatLongToleranceLookupToDto(EisLatLongToleranceLookup source);
 
     public abstract CodeLookupDto facilitySourceTypeCodeToDto(FacilitySourceTypeCode source);
     
     public abstract List<CodeLookupDto> facilitySourceTypeCodeToDtoList(List<FacilitySourceTypeCode> source);
+    
+    public abstract EnergyConversionFactorDto energyConversionFactorToDto(EnergyConversionFactor source);
 
     @Named("CalculationMethodCode")
     public CalculationMethodCode dtoToCalculationMethodCode(CodeLookupDto source) {
